@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://dwa21lp6nt4td"]
+
+[ext_resource type="Script" uid="uid://6fu05m5iudac" path="res://Personaje/Personaje.gd" id="1_per"]
+[ext_resource type="Script" uid="uid://cditfvqqh6w15" path="res://Personaje/Nucleo/Gestor_Acciones.gd" id="2_acc"]
+[ext_resource type="Script" uid="uid://dbr0aiwlnkpac" path="res://Personaje/Nucleo/Gestor_Habilidades.gd" id="3_hab"]
+[ext_resource type="Script" uid="uid://btfccrtqbybie" path="res://Personaje/Nucleo/Gestor_Fisico.gd" id="4_fis"]
+[ext_resource type="Script" uid="uid://d0lbo6s3k88d1" path="res://Personaje/Habilidades/Caminar.gd" id="5_cam"]
+[ext_resource type="Script" uid="uid://dnlqs0xp4555h" path="res://Personaje/Habilidades/Salto.gd" id="6_sal"]
+[ext_resource type="Script" uid="uid://b6me4w883lnmr" path="res://Personaje/Habilidades/Doble_Salto.gd" id="7_dob"]
+[ext_resource type="Script" uid="uid://0ffcitlg2mo2" path="res://Personaje/Habilidades/Bajar_Plataforma.gd" id="8_ak12q"]
+[ext_resource type="Script" uid="uid://7q0esy6867i2" path="res://Personaje/Habilidades/Dash.gd" id="8_das"]
+
+[sub_resource type="Gradient" id="Gradient_1"]
+colors = PackedColorArray(0.35, 0.8, 1, 1, 0.35, 0.8, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_1"]
+gradient = SubResource("Gradient_1")
+width = 32
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(32, 64)
+
+[node name="Personaje" type="CharacterBody2D" unique_id=1670101899]
+collision_layer = 2
+script = ExtResource("1_per")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=837596938]
+texture = SubResource("GradientTexture2D_1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=326623781]
+shape = SubResource("RectangleShape2D_1")
+
+[node name="Gestores" type="Node" parent="." unique_id=76391373]
+
+[node name="Gestor_Acciones" type="Node" parent="Gestores" unique_id=156038989]
+script = ExtResource("2_acc")
+
+[node name="Gestor_Habilidades" type="Node" parent="Gestores" unique_id=1046675461]
+script = ExtResource("3_hab")
+Scripts_Habilidades = Array[Script]([ExtResource("5_cam"), ExtResource("6_sal"), ExtResource("7_dob"), ExtResource("8_das"), ExtResource("8_ak12q")])
+
+[node name="Gestor_Fisico" type="Node" parent="Gestores" unique_id=850960466]
+script = ExtResource("4_fis")

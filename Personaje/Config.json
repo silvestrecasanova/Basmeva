@@ -1,0 +1,31 @@
+{
+	"habilidades": {
+		"bajar_plataforma": {
+			"habilitada": true,
+			"tiempo_caida": 0.25
+		},
+		"caminar": {
+			"habilitada": true,
+			"velocidad": 300.0
+		},
+		"dash": {
+			"duracion": 0.2,
+			"habilitada": true,
+			"recuperacion": 0.4,
+			"velocidad": 700.0
+		},
+		"doble_salto": {
+			"cantidad": 2.0,
+			"fuerza": 450.0,
+			"habilitada": true
+		},
+		"salto": {
+			"fuerza": 450.0,
+			"habilitada": true
+		}
+	},
+	"personaje": {
+		"energia": 100.0,
+		"gravedad": 1200.0
+	}
+}
