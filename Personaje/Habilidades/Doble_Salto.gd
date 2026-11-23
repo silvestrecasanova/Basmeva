@@ -17,7 +17,7 @@ func Parametros_Por_Defecto() -> Dictionary:
 
 
 func Acciones_Por_Defecto() -> Dictionary:
-	return {"saltar": [KEY_SPACE, KEY_W, KEY_UP]}
+	return {"saltar": [KEY_SPACE]}
 
 
 func Al_Cambiar_Config() -> void:
