@@ -1,6 +1,6 @@
-# Base modular de personaje 2D (Metroidvania) – Godot 4
+# Base modular de personaje 2D (Basmeva) – Godot 4
 
-Prototipo de Metroidvania 2D en **Godot 4 (GDScript)**. Probado en 4.3; requiere 4.2 o superior.
+Prototipo de Basmeva 2D en **Godot 4 (GDScript)**. Probado en 4.3; requiere 4.2 o superior.
 Es una base **modular**: el personaje se compone de gestores y de **habilidades independientes**
 que se agregan o quitan sin modificar el resto. Más adelante se irán sumando habilidades y otros
 sistemas del juego (inventario, enemigos, combate, guardado de partida...).
@@ -16,7 +16,7 @@ sistemas del juego (inventario, enemigos, combate, guardado de partida...).
 - Cuadrícula visual configurable (`@tool`, se ve en el editor).
 - Panel de depuración en modo juego para ver y editar valores y guardar el JSON.
 - Configuración en un único `Config.json`; cada habilidad aporta su propia porción.
-
+ 
 **Fuera por ahora:** inventario, enemigos, combate, partida guardada, desbloqueo por progreso,
 remapeo de botones por el jugador.
 
