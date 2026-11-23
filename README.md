@@ -1,6 +1,6 @@
 # Base modular de personaje 2D (Basmeva) – Godot 4
 
-Prototipo de Basmeva 2D en **Godot 4 (GDScript)**. Probado en 4.3; requiere 4.2 o superior.
+Prototipo de Basmeva 2D en **Godot 4 (GDScript)**. Probado en 4.3; requiere 4.2 o superior. 
 Es una base **modular**: el personaje se compone de gestores y de **habilidades independientes**
 que se agregan o quitan sin modificar el resto. Más adelante se irán sumando habilidades y otros
 sistemas del juego (inventario, enemigos, combate, guardado de partida...).
