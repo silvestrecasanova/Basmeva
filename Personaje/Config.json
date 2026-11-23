@@ -19,6 +19,11 @@
 			"fuerza": 450.0,
 			"habilitada": true
 		},
+		"flotar": {
+			"duracion": 0.0,
+			"habilitada": true,
+			"velocidad_caida": 60.0
+		},
 		"salto": {
 			"fuerza": 450.0,
 			"habilitada": true
