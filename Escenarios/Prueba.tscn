@@ -38,7 +38,7 @@ color = Color(0.22, 0.27, 0.35, 1)
 polygon = PackedVector2Array(-576, -48, 576, -48, 576, 48, -576, 48)
 
 [node name="Pared_1" type="StaticBody2D" parent="." unique_id=1657187303 groups=["suelo"]]
-position = Vector2(624, 512)
+position = Vector2(624, 474)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Pared_1" unique_id=419738785]
 shape = SubResource("RectangleShape2D_p0a4m")

@@ -14,6 +14,15 @@
 			"recuperacion": 0.4,
 			"velocidad": 700.0
 		},
+		"deslizar": {
+			"altura": 32.0,
+			"duracion": 0.4,
+			"habilitada": true,
+			"recuperacion": 0.3,
+			"requiere_abajo": 0.0,
+			"velocidad": 450.0,
+			"velocidad_bajo_techo": 150.0
+		},
 		"doble_salto": {
 			"cantidad": 2.0,
 			"fuerza": 450.0,
