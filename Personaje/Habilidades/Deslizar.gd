@@ -1,5 +1,5 @@
 extends Habilidad_Base
-## Deslizarse por el suelo con ESQUIVAR (C) + ABAJO. Mientras desliza, el collider
+## Deslizarse por el suelo con ESQUIVAR (L) + ABAJO. Mientras desliza, el collider
 ## y el sprite se achican (pegados al suelo) para pasar por debajo de obstáculos.
 ## - Solo se inicia desde el suelo; no se desliza en el aire.
 ## - No anula la gravedad: si sale por el borde del suelo o de una plataforma, cae
@@ -10,6 +10,12 @@ extends Habilidad_Base
 ## - Bloquea otras habilidades mientras dura (no se puede saltar ni hacer dash).
 ## Debe ir DESPUÉS de Caminar en Scripts_Habilidades.
 ## (El esquivar parado, sin ABAJO, será otra habilidad que use la misma acción.)
+
+## Segundos que se sigue considerando "en el suelo" tras perderlo. Evita que un
+## parpadeo de is_on_floor() mientras se camina cancele o impida el deslizamiento.
+const Gracia_Suelo: float = 0.1
+
+var Tiempo_Sin_Suelo: float = 0.0
 
 var Velocidad_Deslizar: float = 500.0
 var Duracion: float = 0.4
@@ -39,7 +45,7 @@ func Parametros_Por_Defecto() -> Dictionary:
 
 
 func Acciones_Por_Defecto() -> Dictionary:
-	return {"esquivar": [KEY_C], "abajo": [KEY_S, KEY_DOWN]}
+	return {"esquivar": [KEY_L], "abajo": [KEY_S, KEY_DOWN]}
 
 
 func Al_Cambiar_Config() -> void:
@@ -58,12 +64,16 @@ func Inicializar(personaje: Personaje) -> void:
 
 
 func Actualizar(delta: float) -> void:
+	if Dueno.Fisica.En_Suelo:
+		Tiempo_Sin_Suelo = 0.0
+	else:
+		Tiempo_Sin_Suelo += delta
 	if Tiempo_Recuperacion > 0.0:
 		Tiempo_Recuperacion -= delta
 	if Activa:
 		Mantener_Deslizamiento(delta)
 		return
-	if Esta_Listo() and Dueno.Fisica.En_Suelo \
+	if Esta_Listo() and Sobre_Suelo() \
 			and Dueno.Acciones.Presionada("abajo") \
 			and Dueno.Acciones.Recien_Presionada("esquivar"):
 		Intentar_Activar()
@@ -73,7 +83,7 @@ func Mantener_Deslizamiento(delta: float) -> void:
 	Tiempo_Restante -= delta
 	var hay_techo: bool = Hay_Techo()
 	# Sin techo encima: termina al acabarse el tiempo, al salir del suelo o al chocar con una pared.
-	if not hay_techo and (Tiempo_Restante <= 0.0 or not Dueno.Fisica.En_Suelo or Dueno.is_on_wall()):
+	if not hay_techo and (Tiempo_Restante <= 0.0 or not Sobre_Suelo() or Dueno.is_on_wall()):
 		Terminar()
 		return
 	var velocidad: float = Velocidad_Deslizar
@@ -152,6 +162,10 @@ func Hay_Techo() -> bool:
 			continue
 		return true
 	return false
+
+
+func Sobre_Suelo() -> bool:
+	return Tiempo_Sin_Suelo <= Gracia_Suelo
 
 
 func Esta_Activo() -> bool:

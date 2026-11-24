@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://7q0esy6867i2" path="res://Personaje/Habilidades/Dash.gd" id="8_das"]
 [ext_resource type="Script" uid="uid://b41a1ex7nrx4r" path="res://Personaje/Habilidades/Flotar.gd" id="9_v3jf5"]
 [ext_resource type="Script" uid="uid://dsj6wd3qfafsg" path="res://Personaje/Habilidades/Deslizar.gd" id="10_x72dn"]
+[ext_resource type="Script" uid="uid://bfppwpiyutaf1" path="res://Personaje/Habilidades/Pared.gd" id="11_mow07"]
 
 [sub_resource type="Gradient" id="Gradient_1"]
 colors = PackedColorArray(0.35, 0.8, 1, 1, 0.35, 0.8, 1, 1)
@@ -39,7 +40,7 @@ script = ExtResource("2_acc")
 
 [node name="Gestor_Habilidades" type="Node" parent="Gestores" unique_id=1046675461]
 script = ExtResource("3_hab")
-Scripts_Habilidades = Array[Script]([ExtResource("5_cam"), ExtResource("6_sal"), ExtResource("7_dob"), ExtResource("8_das"), ExtResource("8_ak12q"), ExtResource("9_v3jf5"), ExtResource("10_x72dn")])
+Scripts_Habilidades = Array[Script]([ExtResource("5_cam"), ExtResource("6_sal"), ExtResource("7_dob"), ExtResource("8_das"), ExtResource("8_ak12q"), ExtResource("9_v3jf5"), ExtResource("10_x72dn"), ExtResource("11_mow07")])
 
 [node name="Gestor_Fisico" type="Node" parent="Gestores" unique_id=850960466]
 script = ExtResource("4_fis")

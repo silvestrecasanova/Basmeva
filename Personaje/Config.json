@@ -6,7 +6,7 @@
 		},
 		"caminar": {
 			"habilitada": true,
-			"velocidad": 300.0
+			"velocidad": 200.0
 		},
 		"dash": {
 			"duracion": 0.2,
@@ -30,8 +30,20 @@
 		},
 		"flotar": {
 			"duracion": 0.0,
-			"habilitada": true,
+			"habilitada": false,
 			"velocidad_caida": 60.0
+		},
+		"pared": {
+			"bloqueo": 0.15,
+			"escalar_misma_pared": 1.0,
+			"fuerza_x": 450.0,
+			"fuerza_y": 450.0,
+			"habilitada": true,
+			"recargar_doble_salto": 1.0,
+			"requiere_direccion": 1.0,
+			"tiempo_agarre": 0.5,
+			"tiempo_reaccion": 0.15,
+			"velocidad_deslizamiento": 80.0
 		},
 		"salto": {
 			"fuerza": 450.0,

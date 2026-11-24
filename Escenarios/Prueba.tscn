@@ -3,12 +3,19 @@
 [ext_resource type="Script" uid="uid://bgoo3s317ikc1" path="res://Herramientas/Guia_Rejilla.gd" id="1_rej"]
 [ext_resource type="PackedScene" uid="uid://dwa21lp6nt4td" path="res://Personaje/Escenas/Personaje.tscn" id="2_per"]
 [ext_resource type="Script" uid="uid://ctt14qrc6hpqj" path="res://Herramientas/Panel_Depuracion.gd" id="3_pan"]
+[ext_resource type="Script" uid="uid://cx3rm4ugdlxol" path="res://Herramientas/Rastro_Puntos.gd" id="5_y41ax"]
 
 [sub_resource type="RectangleShape2D" id="Forma_Suelo"]
 size = Vector2(1152, 96)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p0a4m"]
-size = Vector2(32, 128)
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4u4tk"]
+size = Vector2(32, 512)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y41ax"]
+size = Vector2(32, 512)
 
 [sub_resource type="RectangleShape2D" id="Forma_Pared"]
 size = Vector2(32, 672)
@@ -46,6 +53,26 @@ shape = SubResource("RectangleShape2D_p0a4m")
 [node name="Visual" type="Polygon2D" parent="Pared_1" unique_id=678539923]
 color = Color(0.22, 0.27, 0.35, 1)
 polygon = PackedVector2Array(-16, -64, 16, -64, 16, 64, -16, 64)
+
+[node name="Pared_2" type="StaticBody2D" parent="." unique_id=908264291 groups=["pared_deslizable"]]
+position = Vector2(17, 255)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pared_2" unique_id=359444414]
+shape = SubResource("RectangleShape2D_4u4tk")
+
+[node name="Visual" type="Polygon2D" parent="Pared_2" unique_id=1498971372]
+color = Color(0.22, 0.27, 0.35, 1)
+polygon = PackedVector2Array(-16, -256, 16, -256, 16, 256, -16, 256)
+
+[node name="Pared_3" type="StaticBody2D" parent="." unique_id=396975819 groups=["pared_deslizable"]]
+position = Vector2(159, 224)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pared_3" unique_id=2014215611]
+shape = SubResource("RectangleShape2D_y41ax")
+
+[node name="Visual" type="Polygon2D" parent="Pared_3" unique_id=319632994]
+color = Color(0.22, 0.27, 0.35, 1)
+polygon = PackedVector2Array(-16, -256, 16, -256, 16, 256, -16, 256)
 
 [node name="Pared_Izquierda" type="StaticBody2D" parent="." unique_id=1875073440 groups=["suelo"]]
 position = Vector2(-16, 336)
@@ -119,3 +146,9 @@ position = Vector2(96, 544)
 
 [node name="Panel_Depuracion" type="CanvasLayer" parent="." unique_id=385188839]
 script = ExtResource("3_pan")
+
+[node name="Rastro Puntos" type="Node2D" parent="." unique_id=297457871 node_paths=PackedStringArray("Objetivo")]
+position = Vector2(1, 1)
+script = ExtResource("5_y41ax")
+Objetivo = NodePath("../Personaje")
+Maximo_Puntos = 30
