@@ -29,8 +29,14 @@ extends Habilidad_Base
 ##    (despegar de la pared cuenta como el primer salto, igual que despegar del suelo).
 ##  - escalar_misma_pared (0): con 0, si saltas desde una pared y vuelves a la MISMA,
 ##    solo te agarras (o saltas) si estás a la altura de donde saliste o más abajo; así
-##    no se puede escalar una sola pared. Con 1 se permite. Saltar a la pared del otro
-##    lado o tocar el suelo reinicia esta regla.
+##    no se puede escalar una sola pared. Además, al terminar el impulso del salto de
+##    pared (bloqueo) la velocidad vertical queda en 0: no sigue subiendo, solo cae.
+##    Con 1 se permite escalar y no se recorta la subida. La regla de altura se reinicia
+##    al saltar a la pared del otro lado, al tocar el suelo y al usar el doble salto o
+##    el dash: tras eso se puede volver a la misma pared a cualquier altura. Un doble salto en el aire también
+##    la reinicia: la altura donde lo haces pasa a ser el nuevo límite. Con 0, además, al terminar el impulso
+##    del salto de pared (si no tocó otra pared) la velocidad vertical que quede de
+##    subida se pone en 0 y el personaje cae.
 ##
 ## Debe ir ANTES de Doble_Salto en Scripts_Habilidades (para que el salto de pared
 ## tenga prioridad sobre el salto en el aire).
@@ -44,6 +50,8 @@ const Gracia_Despegue: float = 0.05
 const Distancia_Contacto: float = 3.0
 ## Tolerancia (px) de la regla de escalar la misma pared.
 const Margen_Altura: float = 4.0
+## Habilidades que, al usarse, reinician la regla de altura de la misma pared.
+const Habilidades_Que_Reinician: Array[String] = ["doble_salto", "dash"]
 
 var Velocidad_Deslizamiento: float = 80.0
 var Tiempo_Agarre: float = 0.25
@@ -72,6 +80,7 @@ var Altura_Salto: float = 0.0
 
 ## Saltos de Doble_Salto contados al final del frame anterior (-1 = desconocido).
 var Saltos_Anteriores: int = -1
+var Doble_Conectado: bool = false
 
 var Choque_Prueba: KinematicCollision2D = KinematicCollision2D.new()
 
@@ -112,9 +121,27 @@ func Al_Cambiar_Config() -> void:
 
 func Inicializar(personaje: Personaje) -> void:
 	super(personaje)
+	# Usar el doble salto o el dash reinicia la regla de altura de la misma pared.
+	for nombre in Dueno.Habilidades.Registro:
+		Conectar_Reinicio(nombre)
+	Dueno.Habilidades.Habilidad_Registrada.connect(Conectar_Reinicio)
 	Registrar_Funcion("Esta_Deslizando", Esta_Deslizando)
 	Registrar_Funcion("Esta_Agarrado", Esta_Agarrado)
 	Registrar_Funcion("Esta_En_Pared", Esta_En_Pared)
+
+
+## Se engancha a las habilidades que reinician la regla, estén registradas antes o después.
+func Conectar_Reinicio(nombre: String) -> void:
+	if not Habilidades_Que_Reinician.has(nombre):
+		return
+	var otra: Habilidad_Base = Dueno.Habilidades.Obtener(nombre)
+	if otra != null and not otra.Activada.is_connected(Reiniciar_Altura):
+		otra.Activada.connect(Reiniciar_Altura)
+
+
+## Olvida la pared de la que se saltó: desde aquí se puede volver a ella a cualquier altura.
+func Reiniciar_Altura() -> void:
+	Pared_Salto = null
 
 
 func Actualizar(delta: float) -> void:
@@ -124,6 +151,7 @@ func Actualizar(delta: float) -> void:
 
 
 func Procesar(delta: float) -> void:
+	Conectar_Doble_Salto()
 	Actualizar_Contacto(delta)
 	if Mantiene_Agarre():
 		Tiempo_Sin_Presionar = 0.0
@@ -271,7 +299,18 @@ func Mantener_Salto(delta: float) -> void:
 	Tiempo_Bloqueo_Restante -= delta
 	# Si en pleno vuelo toca otra pared deslizable, termina el impulso para poder agarrarse.
 	var toco_pared: bool = Bloqueo - Tiempo_Bloqueo_Restante > Gracia_Despegue and Tiempo_Sin_Pared <= 0.0
+	# Con escalar_misma_pared = 0, al acabarse el impulso sin haber llegado a otra pared
+	# se corta lo que quede de subida (velocidad vertical a 0): el salto es una diagonal
+	# que termina en un punto fijo y desde ahí cae, sin arco que lo devuelva a la misma
+	# pared. Así el impulso puede ser fuerte para subir entre dos paredes sin que sirva
+	# para escalar una sola.
+	if Tiempo_Bloqueo_Restante <= 0.0 and not toco_pared and not Escalar_Misma_Pared and not Dueno.Fisica.En_Suelo:
+		Dueno.Fisica.Establecer_Velocidad_Y(maxf(Dueno.velocity.y, 0.0))
 	if Tiempo_Bloqueo_Restante <= 0.0 or Dueno.Fisica.En_Suelo or toco_pared:
+		# Con escalar_misma_pared = 0, al recuperar el control ya no sigue subiendo:
+		# la velocidad vertical queda en 0 y de ahí solo cae.
+		if not Escalar_Misma_Pared and Dueno.velocity.y < 0.0:
+			Dueno.Fisica.Establecer_Velocidad_Y(0.0)
 		Terminar()
 
 
@@ -290,6 +329,24 @@ func Activar() -> void:
 func Desactivar() -> void:
 	Bloquea_Otras = false
 	Estado = Fase.NINGUNA
+
+
+## Escucha el doble salto (en cuanto exista, sin importar el orden en que se registre).
+func Conectar_Doble_Salto() -> void:
+	if Doble_Conectado:
+		return
+	var doble: Habilidad_Base = Referencia_Doble_Salto()
+	if doble == null:
+		return
+	doble.Activada.connect(Al_Doble_Salto)
+	Doble_Conectado = true
+
+
+## Un doble salto hecho en el aire es un nuevo punto de salida: la altura máxima a la que
+## se puede agarrar la misma pared (escalar_misma_pared = 0) pasa a ser donde se hizo.
+func Al_Doble_Salto() -> void:
+	if is_instance_valid(Pared_Salto):
+		Altura_Salto = Dueno.global_position.y
 
 
 ## Habilidad de doble salto, o null si el personaje no la tiene.

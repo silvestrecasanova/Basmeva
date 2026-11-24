@@ -35,7 +35,7 @@
 		},
 		"pared": {
 			"bloqueo": 0.15,
-			"escalar_misma_pared": 1.0,
+			"escalar_misma_pared": 0.0,
 			"fuerza_x": 450.0,
 			"fuerza_y": 450.0,
 			"habilitada": true,
